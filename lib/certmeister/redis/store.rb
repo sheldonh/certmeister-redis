@@ -4,6 +4,8 @@ module Certmeister
 
     class Store
 
+      include Enumerable
+
       def initialize(redis, environment = "development")
         @redis = redis
         @environment = environment
@@ -23,6 +25,13 @@ module Certmeister
         num_removed == 1
       end
 
+      def each
+        @redis.scan_each do |key|
+          cn = cn_from_pem_key(key)
+          yield cn, fetch(cn)
+        end
+      end
+
       def health_check
         @healthy
       end
@@ -31,6 +40,10 @@ module Certmeister
 
       def pem_key(cn)
         "certmeister:#{@environment}:certificate:#{cn}"
+      end
+
+      def cn_from_pem_key(key)
+        key.split(':')[3]
       end
 
       def break!

@@ -18,8 +18,8 @@ describe Certmeister::Redis::Store do
   private
 
   def redis_cleanup
-    ["axl.starjuice.net", "axl.hetzner.africa"].each do |cn|
-      redis.del(subject.send(:pem_key, "axl.hetzner.africa"))
+    redis.keys(subject.send(:pem_key, "*")).each do |key|
+      redis.del(key)
     end
     leftovers = redis.keys("*")
     if !leftovers.empty?
