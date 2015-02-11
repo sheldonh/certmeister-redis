@@ -2,7 +2,7 @@ module Certmeister
 
   module Redis
 
-    VERSION = '1.0.1' unless defined?(VERSION)
+    VERSION = '1.2.0' unless defined?(VERSION)
 
   end
 
